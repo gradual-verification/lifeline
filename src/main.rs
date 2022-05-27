@@ -1,15 +1,13 @@
-pub mod tools;
-use crate::tools::arguments::*;
-
-pub mod parser;
-use crate::parser::*;
-
-pub mod analyzer;
-use crate::analyzer::*;
+extern crate lifeline;
+use lifeline::parser::parse;
+use lifeline::tools::arguments::args;
+use lifeline::tools::arguments::Config;
+use lifeline::analysis::analyze;
 
 fn main() {
     let config: Config = args();
     let cfg = parse(&config);
     analyze(cfg, config);
 }
+
 
