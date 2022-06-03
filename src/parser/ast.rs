@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{fmt};
 
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Copy)]
@@ -67,7 +67,7 @@ impl fmt::Display for Type<'_> {
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Copy)]
 pub enum UnaryOp {
-    Deref,
+    Deref(usize),
     AddressOf,
     Not
 }
@@ -78,7 +78,7 @@ impl fmt::Display for UnaryOp {
             f,
             "{}",
             match *self {
-                UnaryOp::Deref => "*",
+                UnaryOp::Deref(_) => "*",
                 UnaryOp::AddressOf => "&",
                 UnaryOp::Not => "!"
             }
@@ -91,6 +91,7 @@ pub enum Expr<'a>{
     NumExpr(f32),
     BoolExpr(bool),
     Var(& 'a str), 
+    Call(& 'a str, Vec<Expr<'a>>),
     UnaryExpr(UnaryOp, Box<Expr<'a>>),
     BinaryExpr(Box<Expr<'a>>, BinaryOp, Box<Expr<'a>>)
 }
@@ -105,7 +106,13 @@ impl fmt::Display for Expr<'_> {
                 Expr::BoolExpr(b) => b.to_string(),
                 Expr::Var(s) => s.to_string(),
                 Expr::UnaryExpr(op, e) => format!("{}({})",op.to_string(),e.to_string()),
-                Expr::BinaryExpr(l, op, r) => format!("{} {} {}", l.to_string(), op.to_string(), r.to_string())
+                Expr::BinaryExpr(l, op, r) => format!("{} {} {}", l.to_string(), op.to_string(), r.to_string()),
+                Expr::Call(nm, params) => {
+                    let stringified:Vec<String> = params.into_iter().map(|p| {
+                        p.to_string()
+                    }).collect();
+                    format!("{}({})", nm, stringified.join(","))
+                }
             }
         )
     }
@@ -115,39 +122,60 @@ impl fmt::Display for Expr<'_> {
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum Statement<'a>{
-    ExprInst(Box<Expr<'a>>),
-    Branch(Box<Expr<'a>>, Vec<Statement<'a>>,  Vec<Statement<'a>>),
+    ExprStmt(Box<Expr<'a>>),
+    IfStmt(Box<Expr<'a>>, Vec<Statement<'a>>,  Vec<Statement<'a>>),
     Decl(Box<Type<'a>>, &'a str, ),
     DeclAssign(Box<Type<'a>>,&'a str, Box<Expr<'a>>),
-    Assign(&'a str, Box<Expr<'a>>),
     StructDefn(&'a str, Vec<(Type<'a>, & 'a str)>),
     ProcedureDefn(&'a str, Vec<(Type<'a>, & 'a str)>, Vec<Statement<'a>>, Type<'a>),
     Return(Box<Expr<'a>>)
 }
 
-/*
-impl fmt::Display for Statement<'_> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-        write!(
-            f,
-            "{}",
-            match &*self {
-                Statement::ExprInst(e) => e.to_string(),
-                Statement::Branch(c, bt, bf) => format("if ({})")
-                Statement::Decl(t, n) => 
-                Statement::DeclAssign(t, n, v) => 
-                Statement::Assign(n, v) => 
-                Statement::StructDefn(n, flds) => 
-                Statement::ProcedureDefn(n, params, body, ret) => 
-                Statement::Return(e) => format!("return {};", e.to_string())
-            }
-        )
-    }
+pub fn print_statements<'a>(stmts:&Vec<Statement>, indentation: usize) -> String {
+    stmts.into_iter().map(|s| {
+        print_statement(&s, indentation)
+    }).fold("  ".repeat(indentation), |acc, p| {
+        format!("{}{}\n", acc, p)
+    })
 }
-*/
 
-pub struct Block<'a> {
-    pub contents: Vec<Statement<'a>>
+fn print_params(params: &Vec<(Type, &str)>) -> String {
+    let stringified:Vec<String> = params.into_iter().map(|p| {
+        format!("{} {}", p.0.to_string(), p.1.to_string())
+    }).collect();
+    stringified.join(",")
+}
+
+pub fn print_statement<'a>(stmt: &Statement<'a>, indentation: usize) -> String{
+    let indent = "  ".repeat(indentation);
+    let formatted = match &*stmt {
+        Statement::ExprStmt(eb) => format!("{};",eb.to_string()),
+        Statement::IfStmt(cond, tb, fb)  => {
+            let closing = if fb.len() > 0 {
+                if fb.len() == 1 && matches!(*fb.first().unwrap(), Statement::IfStmt(_, _, _)) {
+                    format!("else {}", print_statement(fb.first().unwrap(), 0))
+                }else{
+                    format!("else {{{}{}}}", print_statements(fb, indentation + 1), indent)
+                }
+            }else{
+                String::from("")
+            };
+            format!("if ({}) {{{}{}}} {}", cond.to_string(), indent, print_statements(tb, indentation + 1), closing)
+        }
+        Statement::Decl(t, n) => format!("{} {};", t.to_string(), n),
+        Statement::DeclAssign(t, n, e) => format!("{} {} = {};", t.to_string(), n, e.to_string()), 
+        Statement::ProcedureDefn(nm, params, body, ret) => {
+            format!("fn {}({}) -> {} {{{}{}}}", nm, print_params(params), ret.to_string(), print_statements(body, indentation+1), indent)
+        }
+        Statement::StructDefn(nm, flds) => {
+            let stringified:Vec<String> = flds.into_iter().map(|p| {
+                format!("{} {}", p.0.to_string(), p.1.to_string())
+            }).collect();
+            format!("struct {} {{{}\n{}}}", nm, stringified.join(",\n"), indent)
+        }
+        Statement::Return(e) => format!("return {};", e.to_string())
+    };
+    format!("{}{}", indent, formatted)
 }
 
 
@@ -157,3 +185,12 @@ pub struct AST<'a> {
     pub global_structs: Vec<Statement<'a>>
 }
 
+impl fmt::Display for AST<'_> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
+        write!(
+            f,
+            "{}",
+            format!("{}\n{}", print_statements(&self.global_structs, 0), print_statements(&self.procedures, 0))
+        )
+    }
+}

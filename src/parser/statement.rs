@@ -6,7 +6,7 @@ use nom::branch::*;
 use nom::multi::{many0, separated_list0};
 use nom::sequence::{delimited, pair, preceded, terminated, tuple};
 use super::ast::{AST, Statement, Type};
-use super::ast::Statement::{Branch, StructDefn, ProcedureDefn};
+use super::ast::Statement::{IfStmt, StructDefn, ProcedureDefn};
 use super::expr;
 use super::expr::{identifier, ig};
 use nom::character::complete::char;
@@ -48,7 +48,7 @@ pub fn proc_defn(input: &str) -> IResult<&str, Statement>{
 
 
 pub fn statement(input: &str) -> IResult<&str, Statement>{
-    ig(alt((assign, decl, expr_inst, decl_assign, ret, if_stmt)))(input)
+    ig(alt((expr_stmt, decl, decl_assign, ret, if_stmt)))(input)
 }
 
 pub fn block(input: &str) -> IResult<&str, Vec<Statement>> {
@@ -64,10 +64,10 @@ fn if_stmt(input: &str) -> IResult<&str, Statement> {
     )(input)?;
     let resulting_expr = match branches.1 {
         Some(f_branch) => {
-            Branch(Box::new(branches.0.0), branches.0.1, f_branch)
+            IfStmt(Box::new(branches.0.0), branches.0.1, f_branch)
         }
         None => {
-            Branch(Box::new(branches.0.0), branches.0.1, vec![])
+            IfStmt(Box::new(branches.0.0), branches.0.1, vec![])
         }
     };
     Ok((input, resulting_expr))
@@ -84,19 +84,14 @@ fn decl_assign(input: &str) -> IResult<&str, Statement> {
     Ok((input, Statement::DeclAssign(Box::new(result.0), result.1, Box::new(result.3))))
 }   
 
-fn assign(input: &str) -> IResult<&str, Statement> {
-    let (input, result) = tuple((ig(identifier), tag("="), ig(expr)))(input)?;
-    Ok((input, Statement::Assign(result.0, Box::new(result.2))))
-}
-
 fn decl(input: &str) -> IResult<&str, Statement> {
     let (input, result) = tuple((type_name, ig(identifier)))(input)?;
     Ok((input, Statement::Decl(Box::new(result.0), result.1)))
 }
 
-fn expr_inst(input: &str) -> IResult<&str, Statement> {
+fn expr_stmt(input: &str) -> IResult<&str, Statement> {
     let (input, result) = expr(input)?;
-    Ok((input, Statement::ExprInst(Box::new(result))))
+    Ok((input, Statement::ExprStmt(Box::new(result))))
 }
 
 fn ret(input: &str) -> IResult<&str, Statement> {
@@ -104,7 +99,7 @@ fn ret(input: &str) -> IResult<&str, Statement> {
     Ok((input, Statement::Return(Box::new(result.1))))
 }
 
-fn type_name(input: &str) -> IResult<&str, Type> {
+pub fn type_name(input: &str) -> IResult<&str, Type> {
     let (input, r) = pair(ig(alt((identifier, tag("bool"), tag("int")))), many0(ig(tag("*"))))(input)?;
     let primary = match r.0 {
         "bool" => Type::Boolean,
