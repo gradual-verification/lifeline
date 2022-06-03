@@ -13,7 +13,7 @@ struct Args {
 }
 
 pub struct Config {
-    source_text: String,
+    pub source_text: String,
 }
 
 pub fn args() -> Config {

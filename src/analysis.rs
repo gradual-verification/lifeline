@@ -1,6 +1,6 @@
 use crate::tools::arguments::Config;
-use crate::parser::cfg::*;
+use crate::parser::ast::*;
 
-pub fn analyze(cfg: CFG, config: Config) {
+pub fn analyze(cfg: & AST, config: & Config) {
 
 }
