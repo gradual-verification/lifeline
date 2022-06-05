@@ -10,7 +10,12 @@ function App() {
       <div className='flex-stack'>
         <Navbar>
           <h1>Lifeline</h1>
-          
+          <a id="gh-link"
+          href="https://github.com/gradual-verification/lifeline" 
+          target="_blank" 
+          rel="noreferrer">
+            <i className="ri-github-fill"></i>
+          </a>
         </Navbar>
         <div className="flex-main">
         <div className="col-editor">
@@ -22,7 +27,6 @@ function App() {
             </div>
             <Editor></Editor>
           </div>
-
         </div>
         <div className="col-display">
           <Output></Output>
