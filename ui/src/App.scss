@@ -1,3 +1,54 @@
+@import "./globals.scss";
+
 .App {
-  
+  width: 100%;
+  height: 100%;
+}
+
+.flex-stack {
+  display: flex;
+  flex-flow: column nowrap;
+
+  height: 100%;
+}
+
+
+
+.flex-main {
+  position: relative;
+  display: flex;
+  height: 100%;
+  flex-flow: ltr nowrap;
+  align-items: stretch;
+  align-content: stretch;
+  flex-grow: 1;
+}
+
+.col-editor {
+  height: 100%;
+  width: 60%;
+  flex-basis: width;
+  flex-grow:3;
+}
+
+.col-display {
+  height: 100%;
+  width: 40%;
+  flex-basis: width;
+  flex-grow:1
+}
+.editor-body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.toolbar {
+  position: absolute;
+  width: 100%;
+  z-index: 2;
+  background-color:transparent;
+  height: 3.5rem !important;
+  text-align: right;
+  padding: 1em;
 }

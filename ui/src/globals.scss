@@ -1,0 +1,39 @@
+@import 'remixicon/fonts/remixicon.css';
+@import "@fontsource/roboto/300.css"; 
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+/* layouts */
+.flex {
+  display: flex;
+  align-items: stretch;
+}
+
+/* widths */
+html, body, #root, .root{
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: none;
+  outline: none;
+
+  font-family: "Roboto", sans-serif;
+}
+
+h1 {
+  font-weight: 100!important;
+
+}
+
+
+.green-b {
+  background-color: #66ff66;
+  color: black;
+}
+i {
+  font-size: 20pt;
+}

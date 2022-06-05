@@ -1,17 +1,17 @@
 import React from 'react';
 import './Editor.scss';
 import AceEditor from "react-ace";
-
+import "ace-builds/src-noconflict/mode-java";
+import "ace-builds/src-noconflict/theme-solarized_dark";
+import "ace-builds/src-noconflict/ext-language_tools";
 function Editor() {
   return (
-    <div className="Editor">
-          <AceEditor
+    <AceEditor
             mode="java"
-            theme="github"
-            name="UNIQUE_ID_OF_DIV"
+            theme="solarized dark"
+            name="ace"
             editorProps={{ $blockScrolling: true }}
-            />,
-    </div>
+            />
   );
 }
 

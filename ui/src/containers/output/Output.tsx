@@ -3,7 +3,8 @@ import './Output.scss';
 
 function Output() {
   return (
-    <div className="Navbar">
+    <div className="Output">
+        <p></p>
     </div>
   );
 }
