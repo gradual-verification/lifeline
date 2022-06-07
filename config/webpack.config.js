@@ -567,7 +567,7 @@ module.exports = function (webpackEnv) {
     },
     plugins: [
       new WasmPackPlugin({
-        crateDirectory: path.resolve(__dirname, '..'),
+        crateDirectory: path.resolve(__dirname, '.'),
 
         // Check https://rustwasm.github.io/wasm-pack/book/commands/build.html for
         // the available set of arguments.
@@ -584,7 +584,7 @@ module.exports = function (webpackEnv) {
         // ],
 
         // The same as the `--out-dir` option for `wasm-pack`
-        outDir: "wasm-build",
+        outDir: "./ui/lifeline",
 
         // The same as the `--out-name` option for `wasm-pack`
         outName: "lifeline",

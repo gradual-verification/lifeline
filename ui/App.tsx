@@ -4,7 +4,7 @@ import Navbar from './containers/navbar/Navbar';
 import Editor from './containers/editor/Editor';
 import Output from './containers/output/Output';
 import { Button } from './components/Button';
-import init, {analyze, pretty_print} from 'lifeline';
+import init, {analyze, pretty_print} from './lifeline';
 function App() {
 
   const [text, setText] = useState("");
