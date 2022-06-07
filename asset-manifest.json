@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/lifeline/static/css/main.c24de957.css",
+    "main.js": "/lifeline/static/js/main.394af971.js",
+    "static/media/remixicon.svg?t=1590207869815": "/lifeline/static/media/remixicon.9cedd2150922ead84869.svg",
+    "static/media/remixicon.eot?t=1590207869815": "/lifeline/static/media/remixicon.5cb99e6cba5a4619063f.eot",
+    "static/media/remixicon.ttf?t=1590207869815": "/lifeline/static/media/remixicon.f2616f597cf98f38d234.ttf",
+    "static/media/remixicon.woff?t=1590207869815": "/lifeline/static/media/remixicon.8d09fa11700ed63cf96e.woff",
+    "static/media/remixicon.woff2?t=1590207869815": "/lifeline/static/media/remixicon.90668f6f9b3c2c18a090.woff2",
+    "static/media/roboto-all-300-normal.woff": "/lifeline/static/media/roboto-all-300-normal.168d6383e73339293ac3.woff",
+    "static/media/lifeline_bg.wasm": "/lifeline/static/media/lifeline_bg.0df1950e0d63cd81a093.wasm",
+    "static/media/roboto-latin-300-normal.woff2": "/lifeline/static/media/roboto-latin-300-normal.c48fb6765a9fcb00b330.woff2",
+    "static/media/roboto-cyrillic-ext-300-normal.woff2": "/lifeline/static/media/roboto-cyrillic-ext-300-normal.4777461b144e55145268.woff2",
+    "static/media/roboto-latin-ext-300-normal.woff2": "/lifeline/static/media/roboto-latin-ext-300-normal.dc7dcec8e3f654e0ed63.woff2",
+    "static/media/roboto-cyrillic-300-normal.woff2": "/lifeline/static/media/roboto-cyrillic-300-normal.1431d1cef06ad04f5458.woff2",
+    "static/media/roboto-greek-300-normal.woff2": "/lifeline/static/media/roboto-greek-300-normal.db2632771401f61463fe.woff2",
+    "static/media/roboto-vietnamese-300-normal.woff2": "/lifeline/static/media/roboto-vietnamese-300-normal.32fc45a3d1e8ea11fabc.woff2",
+    "static/media/roboto-greek-ext-300-normal.woff2": "/lifeline/static/media/roboto-greek-ext-300-normal.35b9d6be04b95f0f0530.woff2",
+    "index.html": "/lifeline/index.html",
+    "main.c24de957.css.map": "/lifeline/static/css/main.c24de957.css.map",
+    "main.394af971.js.map": "/lifeline/static/js/main.394af971.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c24de957.css",
+    "static/js/main.394af971.js"
+  ]
+}
