@@ -11,7 +11,6 @@ use crate::tools::output;
 struct Args {
     src: String
 }
-
 pub struct Config {
     source_text: String,
 }
@@ -22,11 +21,17 @@ pub(crate) fn args() -> Config {
 
 
 fn read_source(path: String) -> String{
-    let mut source_file:Result<File,std::io::Error> = File::open(&path);
+    let source_file:Result<File,std::io::Error> = File::open(&path);
     match source_file{
         Ok(mut valid_file) => {
             let mut source_file_contents:String = String::new();
-            valid_file.read_to_string(&mut source_file_contents);
+            match valid_file.read_to_string(&mut source_file_contents) {
+                Ok(_) => {}
+                Err(_) => {
+                    output::error(format!("Failure reading input file {}.", path));
+                    process::exit(1);
+                }
+            }
             source_file_contents
         }
         Err(_) => {

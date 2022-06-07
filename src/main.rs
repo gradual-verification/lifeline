@@ -1,3 +1,5 @@
+pub mod react_bindings;
+
 pub mod tools;
 use crate::tools::arguments::*;
 
